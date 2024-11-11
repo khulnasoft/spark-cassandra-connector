@@ -44,7 +44,7 @@ object TimeUUIDPredicateRules extends CassandraPredicateRules with Logging {
          | different than the comparison done in C* which is done based on the Time Portion of
          | TimeUUID. This will in almost all cases lead to incorrect results. If possible restrict
          | doing a TimeUUID comparison only to columns which can be pushed down to Cassandra.
-         | https://khulnasoft-oss.atlassian.net/browse/SPARKC-405.
+         | https://khulnasoft.atlassian.net/browse/SPARKC-405.
          |
          | $unhandledTimeUUIDNonEqual
     """.stripMargin)

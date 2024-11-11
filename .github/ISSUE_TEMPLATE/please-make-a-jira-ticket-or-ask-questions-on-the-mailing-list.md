@@ -7,6 +7,6 @@ assignees: ''
 
 ---
 
-For issue tracking we use [JIRA](https://khulnasoft-oss.atlassian.net/projects/SPARKC)
+For issue tracking we use [JIRA](https://khulnasoft.atlassian.net/projects/SPARKC)
 Khulnasoft managed QA at [Khulnasoft Community](https://community.khulnasoft.com/index.html)
 Questions can be posted to the [mailing list](https://groups.google.com/a/lists.khulnasoft.com/forum/#!forum/spark-connector-user).

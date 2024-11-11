@@ -157,7 +157,7 @@ In [DS320: Analytics with Spark](https://www.youtube.com/watch?v=D6PMEQAfjeU&lis
 
 ### Reporting Bugs
 
-New issues may be reported using [JIRA](https://khulnasoft-oss.atlassian.net/browse/SPARKC/). Please include
+New issues may be reported using [JIRA](https://khulnasoft.atlassian.net/browse/SPARKC/). Please include
 all relevant details including versions of Spark, Spark Cassandra Connector, Cassandra and/or DSE. A minimal
 reproducible case with sample code is ideal.
 
@@ -184,7 +184,7 @@ configuration.
 [Tips for Developing the Spark Cassandra Connector](doc/developers.md)
 
 Checklist for contributing changes to the project:
-* Create a [SPARKC JIRA](https://khulnasoft-oss.atlassian.net/projects/SPARKC/issues)
+* Create a [SPARKC JIRA](https://khulnasoft.atlassian.net/projects/SPARKC/issues)
 * Make sure that all unit tests and integration tests pass
 * Add an appropriate entry at the top of CHANGES.txt
 * If the change has any end-user impacts, also include changes to the ./doc files as needed

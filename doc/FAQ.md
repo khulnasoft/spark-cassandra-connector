@@ -54,7 +54,7 @@ this is the case.
 To simplest fix is to move to an artifact which contains the 
 Driver and Guava shaded together.
  
-[SPARKC-355](https://khulnasoft-oss.atlassian.net/browse/SPARKC-355) 
+[SPARKC-355](https://khulnasoft.atlassian.net/browse/SPARKC-355) 
 fixes this in the Spark Cassandra Connector 1.6.2 and 2.0.0-M3 and 
 greater releases. 
 
