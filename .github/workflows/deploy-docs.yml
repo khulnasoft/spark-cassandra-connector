@@ -25,7 +25,7 @@ jobs:
       - name: Run the documentation script
         run: |
           chmod +x ./generateDocs.sh
-          ./generateDocs.sh
+          ./generateDocs.sh 3.5.1
         env:
           JAVA_HOME: /home/runner/.jabba/jdk/adopt@1.8.0-292
           JAVA_HOME_11_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.25-9/x64
