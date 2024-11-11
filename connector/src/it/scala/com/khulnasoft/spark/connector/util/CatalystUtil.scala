@@ -1,0 +1,12 @@
+package com.khulnasoft.spark.connector.util
+
+import com.khulnasoft.spark.connector.datasource.CassandraScan
+import org.apache.spark.sql.execution._
+import org.apache.spark.sql.execution.datasources.v2.BatchScanExec
+
+object CatalystUtil {
+
+  def findCassandraScan(sparkPlan: SparkPlan): Option[CassandraScan] = {
+    sparkPlan.collectFirst{ case BatchScanExec(_, scan: CassandraScan, _, _, _, _) => scan}
+  }
+}

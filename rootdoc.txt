@@ -1,0 +1,2 @@
+KhulnaSoft Connector for Apache Spark to Apache Cassandra.
+See documentation of package [[com.khulnasoft.spark.connector]].
