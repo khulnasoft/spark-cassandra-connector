@@ -3,7 +3,7 @@ name: Deploy Documentation to GitHub Pages
 on:
   push:
     branches:
-      - main  # Adjust as needed
+      - master  # Adjust as needed
 
 jobs:
   build-and-deploy:
