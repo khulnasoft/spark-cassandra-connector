@@ -105,4 +105,25 @@ class IndexedMapSpec extends SparkCassandraITWordSpecBase with DefaultCluster wi
       assertPushedPredicate(data, pushedPredicate = EqualTo("map_col_4", Map(102 -> 112)))
     }
   }
+
+  // Test indexed map columns
+  "Index on map columns" should {
+    "verify correct data is retrieved for various queries" in dseFrom(DSE_V6_8_3) {
+      val df1 = df("map_test").filter(array_contains(map_keys(col("map_col_1")), 101))
+      val df2 = df("map_test").filter(array_contains(map_values(col("map_col_2")), 102))
+      val df3 = df("map_test").filter(col("map_col_3").getItem(103) === 104)
+
+      val results1 = df1.collect
+      val results2 = df2.collect
+      val results3 = df3.collect
+
+      results1 should have size 1
+      results2 should have size 1
+      results3 should have size 1
+
+      results1.head.getMap(1) should contain key 101
+      results2.head.getMap(2) should contain value 102
+      results3.head.getMap(3) should contain (103 -> 104)
+    }
+  }
 }
