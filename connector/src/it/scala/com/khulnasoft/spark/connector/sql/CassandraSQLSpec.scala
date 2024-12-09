@@ -672,4 +672,9 @@ class CassandraSQLSpec extends SparkCassandraITFlatSpecBase with DefaultCluster 
       .mode("append")
       .save()
   }
+
+  it should "verify the issue is resolved" in {
+    val result = spark.sql(s"SELECT * FROM ks1_test1 WHERE a = 1 and b = 1 and c = 1 and d = 1 and e = 1").collect()
+    result should have length 1
+  }
 }
