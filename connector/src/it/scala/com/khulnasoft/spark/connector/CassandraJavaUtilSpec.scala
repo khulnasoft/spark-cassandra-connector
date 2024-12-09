@@ -2072,4 +2072,60 @@ class CassandraJavaUtilSpec extends SparkCassandraITFlatSpecBase with DefaultClu
     row.getString("c22") shouldBe "22"
   }
 
+  // Include tests for saving and reading beans to/from Cassandra
+  it should "save and read beans to/from Cassandra" in {
+    conn.withSessionDo(_.execute(s"TRUNCATE $ks.test_table"))
+
+    val beansRdd = sc.parallelize(Seq(
+      SampleJavaBean.newInstance(1, "one"),
+      SampleJavaBean.newInstance(2, "two"),
+      SampleJavaBean.newInstance(3, "three")
+    ))
+
+    CassandraJavaUtil.javaFunctions(beansRdd)
+      .writerBuilder(ks, "test_table", mapToRow(classOf[SampleJavaBean]))
+      .saveToCassandra()
+
+    val results = CassandraJavaUtil.javaFunctions(sc)
+      .cassandraTable(ks, "test_table", mapRowTo(classOf[SampleJavaBean]))
+      .collect()
+
+    results should have size 3
+    results should contain(SampleJavaBean.newInstance(1, "one"))
+    results should contain(SampleJavaBean.newInstance(2, "two"))
+    results should contain(SampleJavaBean.newInstance(3, "three"))
+  }
+
+  it should "test various scenarios for saving and reading beans" in {
+    conn.withSessionDo(_.execute(s"TRUNCATE $ks.test_table"))
+
+    val beansRdd = sc.parallelize(Seq(
+      SampleJavaBean.newInstance(1, "one"),
+      SampleJavaBean.newInstance(2, "two"),
+      SampleJavaBean.newInstance(3, "three")
+    ))
+
+    CassandraJavaUtil.javaFunctions(beansRdd)
+      .writerBuilder(ks, "test_table", mapToRow(classOf[SampleJavaBean]))
+      .saveToCassandra()
+
+    val results = CassandraJavaUtil.javaFunctions(sc)
+      .cassandraTable(ks, "test_table", mapRowTo(classOf[SampleJavaBean]))
+      .collect()
+
+    results should have size 3
+    results should contain(SampleJavaBean.newInstance(1, "one"))
+    results should contain(SampleJavaBean.newInstance(2, "two"))
+    results should contain(SampleJavaBean.newInstance(3, "three"))
+
+    // Test reading with a different schema
+    val resultsWithDifferentSchema = CassandraJavaUtil.javaFunctions(sc)
+      .cassandraTable(ks, "test_table", mapRowTo(classOf[SampleJavaBeanWithTransientFields]))
+      .collect()
+
+    resultsWithDifferentSchema should have size 3
+    resultsWithDifferentSchema should contain(SampleJavaBeanWithTransientFields.newInstance(1, "one"))
+    resultsWithDifferentSchema should contain(SampleJavaBeanWithTransientFields.newInstance(2, "two"))
+    resultsWithDifferentSchema should contain(SampleJavaBeanWithTransientFields.newInstance(3, "three"))
+  }
 }
