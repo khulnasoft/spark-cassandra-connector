@@ -106,6 +106,9 @@ case class ContinuousPagingScanner(
             s"server setting `continuous_paging.max_concurrent_sessions` or lower the parallelism level of this job " +
             s"(reduce the number of executors and/or assigned cores) or disable continuous paging for this app " +
             s"with ${CassandraConnectionFactory.continuousPagingParam.name}.", e)
+        case e: Exception =>
+          logError("An error occurred while executing the continuous paging query", e)
+          throw e
       }
     }
   }
