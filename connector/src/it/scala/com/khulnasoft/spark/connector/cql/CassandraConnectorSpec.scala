@@ -260,7 +260,13 @@ class CassandraConnectorSpec extends SparkCassandraITFlatSpecBase with DefaultCl
     exception.getMessage should include ("missing file config.json")
   }
 
+  // Test various aspects of CassandraConnector
+  it should "verify connection, session, and cluster metadata" in {
+    conn.withSessionDo { session =>
+      assert(session.isClosed === false)
+      assert(session !== null)
+      assert(session.getMetadata.getNodes.size > 0)
+    }
+  }
 
 }
-
-
