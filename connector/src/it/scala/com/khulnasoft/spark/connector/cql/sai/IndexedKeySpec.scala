@@ -132,4 +132,25 @@ class IndexedKeySpec extends SparkCassandraITWordSpecBase with DefaultCluster wi
       assertNoPushDown(df("pk_test").filter(col("ck_3") === 1))
     }
   }
+
+  // Test indexed key columns
+  "Index on key columns" should {
+    "verify correct data is retrieved for various queries" in dseFrom(DSE_V6_8_3) {
+      val df1 = df("pk_test").filter(col("pk_1") === 1)
+      val df2 = df("pk_test").filter(col("pk_2") === 2)
+      val df3 = df("pk_test").filter(col("pk_3") === 3)
+
+      val results1 = df1.collect
+      val results2 = df2.collect
+      val results3 = df3.collect
+
+      results1 should have size 2
+      results2 should have size 2
+      results3 should have size 2
+
+      results1.foreach(row => row.getInt(0) should be(1))
+      results2.foreach(row => row.getInt(1) should be(2))
+      results3.foreach(row => row.getInt(2) should be(3))
+    }
+  }
 }
