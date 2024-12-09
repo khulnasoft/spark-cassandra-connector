@@ -71,4 +71,52 @@ class CassandraAuthenticatedConnectorSpec extends SparkCassandraITFlatSpecBase w
 
     personDF2.count should be(4)
   }
+
+  // Test authentication with Cassandra
+  it should "authenticate with Cassandra using valid credentials" in {
+    val conn = CassandraConnector(authConf)
+    conn.withSessionDo { session =>
+      assert(session !== null)
+      assert(session.isClosed === false)
+    }
+  }
+
+  it should "fail to authenticate with Cassandra using invalid credentials" in {
+    val invalidAuthConf = authConf.copy(
+      contactInfo = defaultContactInfo.copy(authConf = PasswordAuthConf("invalid_user", "invalid_password"))
+    )
+    val conn = CassandraConnector(invalidAuthConf)
+    val exception = intercept[IOException] {
+      conn.withSessionDo { session => assert(session !== null) }
+    }
+    exception.getCause shouldBe a[AllNodesFailedException]
+    exception.getCause.asInstanceOf[AllNodesFailedException]
+      .getAllErrors.values().asScala
+      .head.asScala
+      .head shouldBe a[AuthenticationException]
+  }
+
+  // Verify valid and invalid credentials
+  it should "verify valid credentials" in {
+    val conn = CassandraConnector(authConf)
+    conn.withSessionDo { session =>
+      assert(session !== null)
+      assert(session.isClosed === false)
+    }
+  }
+
+  it should "verify invalid credentials" in {
+    val invalidAuthConf = authConf.copy(
+      contactInfo = defaultContactInfo.copy(authConf = PasswordAuthConf("invalid_user", "invalid_password"))
+    )
+    val conn = CassandraConnector(invalidAuthConf)
+    val exception = intercept[IOException] {
+      conn.withSessionDo { session => assert(session !== null) }
+    }
+    exception.getCause shouldBe a[AllNodesFailedException]
+    exception.getCause.asInstanceOf[AllNodesFailedException]
+      .getAllErrors.values().asScala
+      .head.asScala
+      .head shouldBe a[AuthenticationException]
+  }
 }
