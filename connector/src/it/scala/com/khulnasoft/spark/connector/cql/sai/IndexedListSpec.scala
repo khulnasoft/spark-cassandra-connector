@@ -47,4 +47,24 @@ class IndexedListSpec extends SparkCassandraITWordSpecBase with DefaultCluster w
     indexOnAFrozenCollection("list_test", "frozen_list_col")
   }
 
+  // Test indexed list columns
+  "Index on list columns" should {
+    "verify correct data is retrieved for various queries" in dseFrom(DSE_V6_8_3) {
+      val df1 = df("list_test").filter(array_contains(col("list_col"), 101))
+      val df2 = df("list_test").filter(array_contains(col("list_col"), 102))
+      val df3 = df("list_test").filter(array_contains(col("list_col"), 103))
+
+      val results1 = df1.collect
+      val results2 = df2.collect
+      val results3 = df3.collect
+
+      results1 should have size 1
+      results2 should have size 1
+      results3 should have size 1
+
+      results1.head.getList(2) should contain(101)
+      results2.head.getList(2) should contain(102)
+      results3.head.getList(2) should contain(103)
+    }
+  }
 }
