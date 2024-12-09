@@ -29,6 +29,32 @@ trait SearchSupport {
 
     session.execute(createStatement)
   }
+
+  // Implement methods for creating and managing search indexes
+  def createSearchIndex(session: CqlSession, ks: String, table: String, indexName: String): Unit = {
+    val createStatement =
+      s"""CREATE SEARCH INDEX IF NOT EXISTS ON "$ks"."$table"
+         |WITH OPTIONS{indexName:'$indexName'}""".stripMargin
+
+    session.execute(createStatement)
+  }
+
+  def dropSearchIndex(session: CqlSession, ks: String, table: String, indexName: String): Unit = {
+    val dropStatement =
+      s"""DROP SEARCH INDEX IF EXISTS ON "$ks"."$table"
+         |WITH OPTIONS{indexName:'$indexName'}""".stripMargin
+
+    session.execute(dropStatement)
+  }
+
+  def listSearchIndexes(session: CqlSession, ks: String, table: String): List[String] = {
+    val listStatement =
+      s"""SELECT index_name FROM system_schema.indexes
+         |WHERE keyspace_name = '$ks' AND table_name = '$table'""".stripMargin
+
+    val resultSet = session.execute(listStatement)
+    resultSet.all().asScala.map(_.getString("index_name")).toList
+  }
 }
 
 object SearchSupport {
