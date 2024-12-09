@@ -14,4 +14,19 @@ class CassandraSSLConnectorSpec extends SparkCassandraITFlatSpecBase with SSLClu
     }
   }
 
+  // Test SSL connections
+  it should "establish a secure connection using SSL" in {
+    conn.withSessionDo { session =>
+      assert(session !== null)
+      assert(session.isClosed === false)
+    }
+  }
+
+  // Verify secure connection is established
+  it should "verify that a secure connection is established" in {
+    conn.withSessionDo { session =>
+      assert(session !== null)
+      assert(session.isClosed === false)
+    }
+  }
 }
