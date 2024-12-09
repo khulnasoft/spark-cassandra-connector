@@ -134,4 +134,27 @@ class ContinuousPagingScannerSpec extends SparkCassandraITFlatSpecBase with Defa
     }
   }
 
+  // Test continuous paging scanner
+  it should "retrieve correct data using continuous paging scanner" in {
+    val rdd = sc.cassandraTable(ks, table).withReadConf(ReadConf(splitCount = Some(400)))
+    val results = rdd.collect()
+    results should not be empty
+    results.foreach(row => {
+      row.getInt("p") should be(1)
+      row.getInt("c") should be(1)
+      row.getInt("d") should be(1)
+    })
+  }
+
+  // Verify correct data is retrieved
+  it should "verify that correct data is retrieved" in {
+    val rdd = sc.cassandraTable(ks, table).withReadConf(ReadConf(splitCount = Some(400)))
+    val results = rdd.collect()
+    results should not be empty
+    results.foreach(row => {
+      row.getInt("p") should be(1)
+      row.getInt("c") should be(1)
+      row.getInt("d") should be(1)
+    })
+  }
 }
