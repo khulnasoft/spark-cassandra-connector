@@ -65,4 +65,50 @@ class CassandraPartitionKeyWhereSpec extends SparkCassandraITFlatSpecBase with D
     result should have length 1
     result.head.getInt("key1") should be (1)
   }
+
+  // Test partition key queries
+  it should "retrieve correct data for partition key queries" in {
+    val rdd1 = sc.cassandraTable(ks, "key_value").where("key = ?", 1)
+    val result1 = rdd1.collect()
+    result1 should have length 1
+    result1.head.getInt("key") should be(1)
+
+    val rdd2 = sc.cassandraTable(ks, "key_value").where("key in (?, ?)", 2, 3)
+    val result2 = rdd2.collect()
+    result2 should have length 2
+    result2.map(_.getInt("key")).toSet should be(Set(2, 3))
+
+    val rdd3 = sc.cassandraTable(ks, "ckey_value").where("key1 = 1 and \"Key2\" in (?, ?)", 100, 200)
+    val result3 = rdd3.collect()
+    result3 should have length 1
+    result3.head.getInt("key1") should be(1)
+  }
+
+  // Verify correct data is retrieved for various queries
+  it should "verify correct data is retrieved for various queries" in {
+    val rdd1 = sc.cassandraTable(ks, "key_value").where("key = ?", 1)
+    val result1 = rdd1.collect()
+    result1 should have length 1
+    result1.head.getInt("key") should be(1)
+
+    val rdd2 = sc.cassandraTable(ks, "key_value").where("key in (?, ?)", 2, 3)
+    val result2 = rdd2.collect()
+    result2 should have length 2
+    result2.map(_.getInt("key")).toSet should be(Set(2, 3))
+
+    val rdd3 = sc.cassandraTable(ks, "ckey_value").where("key1 = 1 and \"Key2\" in (?, ?)", 100, 200)
+    val result3 = rdd3.collect()
+    result3 should have length 1
+    result3.head.getInt("key1") should be(1)
+
+    val rdd4 = sc.cassandraTable(ks, "ckey_value").where("key1 = ? and \"Key2\" = ?", 1, 100)
+    val result4 = rdd4.collect()
+    result4 should have length 1
+    result4.head.getInt("key1") should be(1)
+
+    val rdd5 = sc.cassandraTable(ks, "ckey_value").where("\"Key2\" in (?, ?) and key1 = 1", 100, 200)
+    val result5 = rdd5.collect()
+    result5 should have length 1
+    result5.head.getInt("key1") should be(1)
+  }
 }
